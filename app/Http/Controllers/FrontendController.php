@@ -16,7 +16,9 @@ class FrontendController extends Controller
     public function details(Request $request, $slug)
     {
         $product = Product::with(['galleries'])->where('slug', $slug)->firstOrFail();
-        return view('pages.frontend.details', compact('product'));
+
+        $recommendations = Product::with(['galleries'])->inRandomOrder()->limit(4)->get()->except($product->id);
+        return view('pages.frontend.details', compact('product', 'recommendations'));
     }
 
     public function cart(Request $request)
